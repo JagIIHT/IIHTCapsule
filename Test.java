@@ -123,3 +123,38 @@ public class LibrarianServiceTest {
 		this.librarianService.issueBook(new Book("Java", "Y"));		
 	}
 }
+
+											      
+											      
+											      
+@DataJpaTest
+@RunWith(SpringRunner.class)
+public class LibrarianRepositoryTest {
+
+	@Autowired
+	private LibrarianRepository librarianRepository ;
+
+	private Book issuedBook;
+	private Book returnedBook;
+
+	@Before
+	public void setUp() {
+		this.issuedBook = new Book("Java", "Y");
+		this.returnedBook = new Book("C", "N");
+		List<Book> list = Arrays.asList(this.returnedBook, this.issuedBook);
+		this.librarianRepository.save(this.returnedBook)
+	}
+	
+	@Test(expected = Test.None.class)
+	public void testSaveBook() {
+		Book book = this.librarianRepository.save(this.returnedBook);
+		assertThat(book.getName().equals(this.returnedBook.getName()));		
+	}
+	
+	@Test(expected = Test.None.class)
+	public void testFindAllByIssued() {
+		List<Book> list = this.librarianRepository.findAllByIssued("Y");
+		assertThat(list.get(0).getName().equals(this.issuedBook.getName()));
+	}
+}
+	
